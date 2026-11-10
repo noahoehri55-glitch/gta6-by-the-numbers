@@ -1,0 +1,267 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Osw;src:url(../assets/fonts/oswald-latin-500-normal.woff2);font-weight:500}
+@font-face{font-family:Osw;src:url(../assets/fonts/oswald-latin-600-normal.woff2);font-weight:600}
+@font-face{font-family:Osw;src:url(../assets/fonts/oswald-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:Fr;src:url(../assets/fonts/fraunces-latin-400-normal.woff2);font-weight:400}
+@font-face{font-family:Fr;src:url(../assets/fonts/fraunces-latin-400-italic.woff2);font-weight:400;font-style:italic}
+@font-face{font-family:Fr;src:url(../assets/fonts/fraunces-latin-600-italic.woff2);font-weight:600;font-style:italic}
+@font-face{font-family:Mono;src:url(../assets/fonts/ibm-plex-mono-latin-400-normal.woff2);font-weight:400}
+@font-face{font-family:Mono;src:url(../assets/fonts/ibm-plex-mono-latin-500-normal.woff2);font-weight:500}
+@font-face{font-family:Mono;src:url(../assets/fonts/ibm-plex-mono-latin-600-normal.woff2);font-weight:600}
+:root{--cream:#f1e7d3;--mute:#b9ad98;--sig:#ff6a1a;--ink:#1c1a17;--red:#c4301c;--pink:#ff5f8f}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#000;color:var(--cream)}
+.scene{position:absolute;inset:0;display:none;overflow:hidden}
+.scene.on{display:block}
+.plate{position:absolute;inset:-4%;background-size:cover;background-position:center;will-change:transform}
+.shade{position:absolute;inset:0}
+.in{position:absolute;inset:0;padding:110px 130px}
+.osw{font-family:Osw;font-weight:700;text-transform:uppercase;letter-spacing:.005em;line-height:.94}
+.fr{font-family:Fr;font-style:italic;font-weight:400}
+.mono{font-family:Mono;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.r{opacity:0}
+.src{position:absolute;left:130px;bottom:52px;font:400 19px Mono;letter-spacing:.04em;color:#d8cdb8b0}
+.src.dk{color:#1c1a17a0}
+.sig{color:var(--sig)}
+#grain{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:overlay;opacity:.5;z-index:50}
+#vig{position:absolute;inset:0;z-index:49;background:radial-gradient(ellipse at 50% 50%,transparent 55%,#0008 100%);pointer-events:none}
+#black{position:absolute;inset:0;background:#000;z-index:60;opacity:0;pointer-events:none}
+.paper .plate{filter:brightness(1.04) contrast(1.05) saturate(.85)}
+.paper .shade{background:radial-gradient(ellipse at 50% 45%,transparent 50%,#5a3d1f55 100%)}
+.paper h2{color:var(--ink);font-size:70px}
+.paper h2 small{font:italic 400 36px Fr;text-transform:none;color:#4a4237;margin-left:18px;letter-spacing:0}
+.csvg{position:absolute;left:110px;top:220px;width:1700px;height:780px;overflow:visible}
+.ax{font:500 22px Mono;fill:#4a4237}
+.axb{font:600 26px Osw;fill:#1c1a17;text-transform:uppercase}
+.val{font:700 34px Osw;fill:#1c1a17}
+.valg{font:500 24px Mono;fill:#6d6253}
+.hand{font:italic 600 36px Fr;fill:var(--red)}
+.hands{font:italic 400 27px Fr;fill:#3d342a}
+
+/* cold */
+#cold .plate{filter:brightness(.62) saturate(.9)}
+#cold .shade{background:linear-gradient(90deg,#0d0a07f5 0%,#0d0a07c8 45%,#0d0a0730 85%)}
+#cold .k{font-size:24px;color:var(--sig);margin:30px 0 24px}
+#cold h1{font-size:250px;position:relative;display:inline-block}
+#cold .sub{font-size:58px;margin-top:22px;max-width:1300px;line-height:1.15}
+#cold .claim{margin-top:56px;font:500 34px Mono;letter-spacing:.02em}
+#cold .claim b{color:var(--sig);font-weight:600}
+#cold .rec{margin-top:26px;font-size:40px;color:var(--mute);position:relative;display:inline-block}
+#cold .rec svg{position:absolute;left:-30px;top:-22px;width:calc(100% + 60px);height:calc(100% + 44px);overflow:visible}
+
+/* method */
+#method .plate{filter:brightness(.5) saturate(.8)}
+#method .shade{background:linear-gradient(180deg,#0b0907e8 0%,#0b0907c0 60%,#0b0907f2 100%)}
+#method .lead{font-size:56px;max-width:1500px;line-height:1.12}
+#method .row{display:flex;margin-top:110px}
+#method .n{flex:1;padding:0 50px;border-left:2px solid #f1e7d340}
+#method .n:first-child{padding-left:0;border-left:0}
+#method .n b{display:block;font-size:200px;line-height:.9}
+#method .n b.sm{font-size:118px;line-height:1.05}
+#method .n>span{display:block;margin-top:28px;font-size:24px;color:var(--mute);line-height:1.5}
+
+/* hours */
+#hours .plate{filter:brightness(.55) saturate(.75)}
+#hours .shade{background:linear-gradient(90deg,#0a0c0bf2 0%,#0a0c0bc8 55%,#0a0c0b70 100%)}
+#hours h2{font-size:80px;max-width:1500px}
+#hrows{position:absolute;left:130px;top:300px;width:1180px}
+.hrow{display:grid;grid-template-columns:340px 1fr 150px;align-items:center;height:78px;opacity:0}
+.hrow .nm{font:600 40px Osw;text-transform:uppercase;white-space:nowrap}
+.hrow .nm small{font:400 20px Mono;color:var(--mute);margin-left:12px}
+.hrow svg{width:100%;height:30px;overflow:visible}
+.hrow .h{font:700 44px Osw;text-align:right}
+#hbig{position:absolute;right:130px;top:330px;text-align:right;opacity:0}
+#hbig .k{font-size:24px;color:var(--sig)}
+#hbig .b{font-size:250px;color:var(--sig);line-height:.9;margin-top:10px}
+#hbig .fr{font-size:38px;margin-top:10px}
+
+/* catch */
+#catch .plate{filter:brightness(.62) saturate(.85)}
+#catch .shade{background:linear-gradient(90deg,#0b0907f5 0%,#0b0907d0 55%,#0b090720 92%)}
+#catch h2{font-size:100px;max-width:1400px}
+.ev{position:absolute;left:130px;top:360px;width:1000px;opacity:0}
+.ev .k{font-size:24px;color:var(--sig)}
+.ev .big{font-size:200px;margin-top:8px}
+.ev .fr{font-size:44px;line-height:1.25;margin-top:16px}
+
+/* end */
+#end .plate{filter:brightness(.5) saturate(.85)}
+#end .shade{background:radial-gradient(ellipse at 50% 55%,#0b090760 0%,#0b0907e8 75%)}
+#end .wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#end h1{font-size:140px;max-width:1600px}
+#end .fr{font-size:46px;margin-top:40px;max-width:1350px;line-height:1.25}
+#end .d{margin-top:56px;font-size:22px;color:var(--mute)}
+#end .nx{font-size:60px;margin-top:56px}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+ <filter id="rough" x="-5%" y="-30%" width="110%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="7"/></filter>
+ <filter id="ruff" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".02" numOctaves="2" seed="8"/><feDisplacementMap in="SourceGraphic" scale="4"/></filter>
+</defs></svg>
+
+<section class="scene" id="cold"><div class="plate" style="background-image:url(../assets/plates/cold.webp)"></div><div class="shade"></div>
+ <div class="in">
+  <div class="mono k r" data-b="0">GTA 6 by the numbers · File 01</div>
+  <h1 class="osw r" data-b="0">$79.99</h1>
+  <div class="sub fr r" data-b="0">The cheapest main-series GTA ever released?</div>
+  <div class="claim r" data-b="1">8 games · 1997 → 2026 · US launch price × inflation</div>
+  <div class="claim r" data-b="2"><b id="c_claim"></b></div>
+  <div class="osw rec r" data-b="3">The “priciest ever” claim?<svg viewBox="0 0 600 100" preserveAspectRatio="none"><path id="c_circ" fill="none" stroke="#ff6a1a" stroke-width="6" stroke-linecap="round" filter="url(#rough)"/></svg></div>
+ </div>
+</section>
+
+<section class="scene" id="method"><div class="plate" style="background-image:url(../assets/plates/retro.webp)"></div><div class="shade"></div>
+ <div class="in">
+  <div class="osw lead r" data-b="0">Every main GTA. Its US launch price. Its launch month's inflation.</div>
+  <div class="row">
+   <div class="n r" data-b="0"><b class="osw">8</b><span class="mono">main-series games<br>1997 – 2026</span></div>
+   <div class="n r" data-b="1"><b class="osw sm">$50<br>$60<br><span class="sig">$80</span></b><span class="mono">US launch prices<br>standard editions</span></div>
+   <div class="n r" data-b="2"><b class="osw sm">CPI-U</b><span class="mono" id="m_cpi"></span></div>
+  </div>
+ </div>
+ <div class="src">US Bureau of Labor Statistics, CPI-U (not seasonally adjusted) · launch prices: Kotaku, Rockstar</div>
+</section>
+
+<section class="scene paper" id="adj"><div class="plate" style="background-image:url(../assets/plates/plaster.webp)"></div><div class="shade"></div>
+ <div class="in"><h2 class="osw">Every main GTA, in today's dollars<small id="a_sub"></small></h2></div>
+ <svg class="csvg" id="asvg" viewBox="0 0 1700 780"></svg>
+ <div class="src dk" id="a_src"></div>
+</section>
+
+<section class="scene" id="hours"><div class="plate" style="background-image:url(../assets/plates/clock.webp)"></div><div class="shade"></div>
+ <div class="in"><h2 class="osw r" data-b="0">Hours of work <span class="sig">to buy it</span></h2></div>
+ <div id="hrows"></div>
+ <div id="hbig"><div class="mono k">GTA 6</div><div class="osw b" id="hb_n"></div><div class="fr">hours at the average wage</div></div>
+ <div class="src">Average hourly earnings, production and nonsupervisory employees · US BLS, series CES0500000008</div>
+</section>
+
+<section class="scene" id="catch"><div class="plate" style="background-image:url(../assets/plates/console.webp)"></div><div class="shade"></div>
+ <div class="in"><h2 class="osw r" data-b="0">Cheap? <span class="sig">Two catches.</span></h2></div>
+ <div class="ev" id="e1"><div class="mono k">Catch 1 · Ultimate Edition</div><div class="osw big">$99.99</div><div class="fr" id="e1t"></div></div>
+ <div class="ev" id="e2"><div class="mono k">Catch 2 · Something to play it on</div><div class="osw big">$599.99</div><div class="fr">The cheapest new PS5, the Digital Edition, since April 2026.</div></div>
+ <div class="src" id="csrc"></div>
+</section>
+
+<section class="scene paper" id="combo"><div class="plate" style="background-image:url(../assets/plates/plaster.webp)"></div><div class="shade"></div>
+ <div class="in"><h2 class="osw">Game + cheapest new PlayStation<small>in today's dollars</small></h2></div>
+ <svg class="csvg" id="bsvg" viewBox="0 0 1700 780"></svg>
+ <div class="src dk">Cheapest new PlayStation on launch day (Kotaku; PlayStation Blog) + standard edition · adjusted with US CPI-U</div>
+</section>
+
+<section class="scene" id="end"><div class="plate" style="background-image:url(../assets/plates/end.webp)"></div><div class="shade"></div>
+ <div class="wrap">
+  <h1 class="osw r" data-b="0">Cheapest game. <span class="sig">Not the cheapest ticket.</span></h1>
+  <div class="fr r" data-b="1">Already own a PS5? Best deal in the series' history.</div>
+  <div class="osw r nx" data-b="2">What did your first GTA cost? <span class="sig">↓</span></div>
+  <div class="mono d r" data-b="3">Next: GTA 6 by the numbers, daily until launch &nbsp;·&nbsp; Sources in the description</div>
+ </div>
+</section>
+
+<svg id="grain"><filter id="gn"><feTurbulence id="gt" type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="1" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#gn)"/></svg>
+<div id="vig"></div><div id="black"></div>
+
+<script>
+const D=window.__DATA__,F=D.facts,TL=D.timeline;
+const ease=x=>{x=Math.min(1,Math.max(0,x));return 1-Math.pow(1-x,3)},clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const usd0=v=>'$'+Math.round(v).toLocaleString('en-US'),usd=v=>'$'+v.toFixed(2);
+const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const mlabel=m=>MN[+m.slice(5)-1]+' '+m.slice(0,4);
+const G=F.games,G6=G[G.length-1],OLD=G.slice(0,-1),byId=Object.fromEntries(G.map(g=>[g.id,g]));
+
+$('#c_claim').textContent=F.cheaper_than_all?'All 7 before it cost more.':'Not all of them cost more.';
+$('#m_cpi').innerHTML='prices in '+mlabel(F.cpi_month)+' dollars<br>latest CPI before '+F.data_end;
+$('#a_sub').textContent=mlabel(F.cpi_month)+' dollars';
+$('#a_src').textContent='Light bar: price paid at launch · dark bar: same amount in '+mlabel(F.cpi_month)+' dollars (US CPI-U, BLS)';
+$('#e1t').textContent=F.ultimate_beats.length?`More, in today's money, than ${F.ultimate_beats.length} of the 7 older games.`:'Still under every older GTA, in today\'s money.';
+$('#csrc').textContent='Rockstar Games, PlayStation Blog (27 Mar 2026)';
+
+/* rough helpers */
+let sd=7;const rnd=()=>{sd=(sd*16807)%2147483647;return sd/2147483647};
+function roughEllipse(cx,cy,rx,ry){let p=[];const n=34,st=-0.5;for(let i=0;i<=n+5;i++){const a=st+i/n*Math.PI*2.13,j=1+(rnd()-.5)*.07;p.push([cx+Math.cos(a)*rx*j,cy+Math.sin(a)*ry*j])}
+ return 'M'+p.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join(' L')}
+function arrow(x1,y1,x2,y2,bend){const mx=(x1+x2)/2+bend,my=(y1+y2)/2-bend*.4;const a=Math.atan2(y2-my,x2-mx),h=20;
+ return `M${x1} ${y1} Q${mx} ${my} ${x2} ${y2} M${x2-h*Math.cos(a-.45)} ${y2-h*Math.sin(a-.45)} L${x2} ${y2} L${x2-h*Math.cos(a+.45)} ${y2-h*Math.sin(a+.45)}`}
+const red='#c4301c';
+const mark=(id,d,tx)=>`<g id="${id}"><path class="dr" d="${d}" fill="none" stroke="${red}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" filter="url(#rough)"/>${tx}</g>`;
+$('#c_circ').setAttribute('d',roughEllipse(300,50,300,48));
+
+/* bar chart builder (paper) */
+function bars(svg,key,ghost){
+ const W=1700,H=780,L=40,R=40,T=60,B=110,n=G.length,gw=(W-L-R)/n;
+ const vmax=Math.max(...G.map(g=>g[key]),...(ghost?G.map(g=>g.price):[0]));const top=Math.ceil(vmax*1.18/50)*50;
+ const Y=v=>T+(H-T-B)*(1-v/top),bw=ghost?gw*.30:gw*.5;
+ let s='';const grid=top>400?200:20;for(let v=grid;v<top;v+=grid)s+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#1c1a17" stroke-opacity=".1" stroke-width="1.5"/>`;
+ s+=`<line x1="${L}" x2="${W-R}" y1="${Y(0)}" y2="${Y(0)}" stroke="#1c1a17" stroke-opacity=".6" stroke-width="2.5"/>`;
+ const geo=[];
+ G.forEach((g,i)=>{const cx=L+gw*(i+.5),six=g.id=='gta6',col=six?red:'#1c1a17';
+  if(ghost){const x=cx-bw-4;s+=`<g class="gh" data-i="${i}" style="opacity:0"><rect x="${x}" y="${Y(g.price)}" width="${bw}" height="${Y(0)-Y(g.price)}" fill="#1c1a17" fill-opacity=".16" filter="url(#ruff)"/><text class="valg" x="${x+bw/2}" y="${Y(g.price)-12}" text-anchor="middle">${usd0(g.price)}</text></g>`}
+  const x=ghost?cx+4:cx-bw/2;
+  s+=`<g class="bar" data-i="${i}"><rect x="${x}" width="${bw}" fill="${col}" fill-opacity="${six?.92:.86}" filter="url(#ruff)" data-y0="${Y(0)}" data-y1="${Y(g[key])}" y="${Y(0)}" height="0"/><text class="val" x="${x+bw/2}" y="${Y(g[key])-14}" text-anchor="middle" style="opacity:0;fill:${col}">${six&&key=='adj'?usd(g[key]):usd0(g[key])}</text></g>`;
+  s+=`<text class="axb" x="${cx}" y="${H-60}" text-anchor="middle" ${six?`style="fill:${red}"`:''}>${g.name}</text><text class="ax" x="${cx}" y="${H-28}" text-anchor="middle">${g.year}</text>`;
+  geo.push({cx,x,bw,y:Y(g[key])});});
+ return {s,geo,Y};
+}
+const A=bars('#asvg','adj',true);
+const iClose=G.findIndex(g=>g.id==F.closest),a6=A.geo[7],aC=A.geo[iClose];
+let ag=A.s;
+const iTop=G.findIndex(g=>g.id==F.priciest),aT=A.geo[iTop];
+ag+=mark('am1',roughEllipse(aT.x+aT.bw/2,aT.y-26,62,32),`<text class="hand tx" x="${aT.x+aT.bw/2+70}" y="${aT.y-60}">priciest</text>`);
+ag+=mark('am2',roughEllipse(A.geo[2].x+A.geo[2].bw/2,A.geo[2].y-26,62,32),'');
+ag+=mark('am3',roughEllipse(a6.x+a6.bw/2,a6.y-26,78,34),'');
+ag+=mark('am4',arrow(a6.x+a6.bw/2-40,Math.min(aC.y,a6.y)-140,a6.x+a6.bw/2,a6.y-68,-30),`<text class="hand tx" x="${a6.x+a6.bw/2+20}" y="${Math.min(aC.y,a6.y)-156}" text-anchor="end">lowest · ${usd0(G[iClose].adj-G6.adj)} under ${G[iClose].name}</text>`);
+$('#asvg').innerHTML=ag;
+const B2=bars('#bsvg','combo_adj',false);
+const iCT=G.findIndex(g=>g.id==F.combo_top),b6=B2.geo[7],b3=B2.geo[2],bT=B2.geo[iCT];
+const ord=['','#1','#2','#3','#4','#5','#6','#7','#8'];
+let bg=B2.s;
+bg+=mark('bm1',roughEllipse(b3.x+b3.bw/2,b3.y-26,70,32),'');
+bg+=mark('bm2',roughEllipse(bT.x+bT.bw/2,bT.y-26,72,34),iCT==7?'':`<text class="hand tx" x="${bT.x+bT.bw/2}" y="${bT.y-80}" text-anchor="middle">the real record</text>`);
+bg+=mark('bm3',roughEllipse(b6.x+b6.bw/2,b6.y-26,74,36),`<text class="hand tx" x="${b6.x-30}" y="${b6.y-50}" text-anchor="end">${F.gta6_combo_place==1?'a franchise record':ord[F.gta6_combo_place]+' of 8'}</text>`);
+$('#bsvg').innerHTML=bg;
+
+/* hours rows */
+const hmax=Math.max(...G.map(g=>g.hours));
+G.forEach((g,i)=>{const six=g.id=='gta6',col=six?'#ff6a1a':'#f1e7d3';const e=document.createElement('div');e.className='hrow';e.dataset.i=i;
+ e.innerHTML=`<div class="nm" style="color:${col}">${g.name}<small>${g.year}</small></div><svg viewBox="0 0 700 30" preserveAspectRatio="none"><rect x="0" y="5" height="20" width="0" fill="${col}" filter="url(#rough)" data-w="${g.hours/hmax*680}"/></svg><div class="h" style="color:${col}">${g.hours.toFixed(1)} h</div>`;
+ $('#hrows').appendChild(e)});
+$('#hb_n').textContent=G6.hours.toFixed(1);
+
+const lens=new Map();$$('.dr,#c_circ').forEach(p=>{const l=p.getTotalLength();lens.set(p,l);p.style.strokeDasharray=l;p.style.strokeDashoffset=l});
+const drawPath=(p,a)=>p.style.strokeDashoffset=lens.get(p)*(1-ease(a));
+const fade=(e,a)=>{e.style.opacity=ease(a);e.style.transform=`translateY(${(1-ease(a))*18}px)`};
+function rev(sec,b,tt){sec.querySelectorAll('.r').forEach(e=>{const s=(b[+e.dataset.b||0]||b[0]).start;fade(e,(tt-s)/.6)})}
+function growBar(g,a){const r=g.querySelector('rect'),y0=+r.dataset.y0,y1=+r.dataset.y1,h=(y0-y1)*ease(a);r.setAttribute('y',y0-h);r.setAttribute('height',h);g.querySelector('text').style.opacity=ease((a-.7)/.3)}
+function markAt(id,s,tt){const e=$('#'+id);drawPath(e.querySelector('.dr'),(tt-s)/.7);e.querySelectorAll('.tx').forEach(x=>x.style.opacity=ease((tt-s-.4)/.4))}
+
+window.draw=function(t){
+ $('#gt').setAttribute('seed',1+Math.floor(t*24)%12);
+ let k=TL.scenes.findIndex(s=>t>=s.start&&t<s.start+s.dur);if(k<0)k=t<=0?0:TL.scenes.length-1;
+ const sc=TL.scenes[k],tt=t-sc.start,b=sc.beats,p=tt/sc.dur,bs=i=>(b[Math.min(i,b.length-1)]).start;
+ $$('.scene').forEach(e=>e.classList.toggle('on',e.id==sc.type));
+ const sec=$('#'+sc.type);rev(sec,b,tt);
+ const pl=sec.querySelector('.plate');pl.style.transform=`scale(${1.02+.07*p}) translate(${(k%2?-1:1)*1.4*p}%,${-.6*p}%)`;
+ const tin=ease(tt/.45),tout=ease((sc.dur-tt)/.35);$('#black').style.opacity=1-Math.min(tin,k==TL.scenes.length-1?1:tout);
+ if(sc.type=='cold')drawPath($('#c_circ'),(tt-bs(3)-.6)/.6);
+ if(sc.type=='adj'){
+  // which beat reveals which bar: original+GTA2 / III+VC+SA / IV+V / 6
+  const when=[1,1,2,2,2,3,3,4];
+  $$('#asvg .gh').forEach(g=>g.style.opacity=ease((tt-.6-(+g.dataset.i)*.12)/.4));
+  $$('#asvg .bar').forEach(g=>{const i=+g.dataset.i,s=bs(when[i])+.3+(i-when.indexOf(when[i]))*.35;growBar(g,(tt-s)/.8)});
+  markAt('am1',bs(1)+1.6,tt);markAt('am2',bs(2)+2.2,tt);markAt('am3',bs(4)+1.4,tt);markAt('am4',bs(5)+.8,tt);
+ }
+ if(sc.type=='hours'){
+  const when=[1,1,2,2,2,2,2,3];
+  $$('.hrow').forEach(e=>{const i=+e.dataset.i,s=bs(when[i])+.2+(i-when.indexOf(when[i]))*.3;e.style.opacity=ease((tt-s)/.4);const r=e.querySelector('rect');r.setAttribute('width',ease((tt-s)/.8)*r.dataset.w)});
+  fade($('#hbig'),(tt-bs(3)-.4)/.5);
+ }
+ if(sc.type=='catch'){const a=tt<bs(2)-.1?ease((tt-bs(1))/.5):0,c=ease((tt-bs(2))/.5);fade($('#e1'),tt<bs(2)-.1?(tt-bs(1))/.5:0);fade($('#e2'),(tt-bs(2))/.5)}
+ if(sc.type=='combo'){
+  const when=[0,0,1,1,1,2,2,3];
+  $$('#bsvg .bar').forEach(g=>{const i=+g.dataset.i,s=bs(when[i])+.4+(i-when.indexOf(when[i]))*.3;growBar(g,(tt-s)/.8)});
+  markAt('bm1',bs(1)+1.2,tt);markAt('bm2',bs(2)+.8,tt);markAt('bm3',bs(3)+2,tt);
+ }
+};
+document.fonts.ready.then(()=>{window.draw(0);window.__ready=true});
+</script></body></html>

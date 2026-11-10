@@ -1,0 +1,49 @@
+name: twitch-log
+
+# Every 30 min: snapshot live Twitch viewers for GTA VI and GTA V, append to twitch.csv on the 'data' branch.
+on:
+  schedule:
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: twitch
+  cancel-in-progress: false
+
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests
+      - name: Check out data branch
+        env:
+          URL: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+        run: |
+          if git ls-remote --exit-code --heads "$URL" data >/dev/null; then
+            git clone -q --depth 1 --branch data "$URL" d
+          else
+            mkdir d && git -C d init -q -b data && git -C d remote add origin "$URL"
+          fi
+          mkdir -p data && cp d/twitch.csv data/twitch.csv 2>/dev/null || true
+      - name: Snapshot
+        env:
+          TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+          TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
+        run: python pipeline/twitch_log.py
+      - name: Push
+        run: |
+          cp data/twitch.csv d/twitch.csv
+          cd d
+          git config user.name "data-bot"
+          git config user.email "data-bot@users.noreply.github.com"
+          git add twitch.csv
+          git commit -q -m "Twitch snapshot $(date -u +%FT%H:%MZ)"
+          git push -q origin data

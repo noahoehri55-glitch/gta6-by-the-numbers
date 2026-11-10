@@ -1,0 +1,161 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Osw;src:url(../assets/fonts/oswald-latin-600-normal.woff2);font-weight:600}
+@font-face{font-family:Osw;src:url(../assets/fonts/oswald-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:Fr;src:url(../assets/fonts/fraunces-latin-400-italic.woff2);font-weight:400;font-style:italic}
+@font-face{font-family:Fr;src:url(../assets/fonts/fraunces-latin-600-italic.woff2);font-weight:600;font-style:italic}
+@font-face{font-family:Mono;src:url(../assets/fonts/ibm-plex-mono-latin-500-normal.woff2);font-weight:500}
+@font-face{font-family:Mono;src:url(../assets/fonts/ibm-plex-mono-latin-600-normal.woff2);font-weight:600}
+:root{--cream:#f1e7d3;--mute:#b9ad98;--sig:#ff6a1a;--ink:#1c1a17;--red:#c4301c}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000;color:var(--cream)}
+.scene{position:absolute;inset:0;display:none;overflow:hidden}.scene.on{display:block}
+.plate{position:absolute;inset:-3%;background-size:cover;background-position:center}
+.shade{position:absolute;inset:0}
+.osw{font-family:Osw;font-weight:700;text-transform:uppercase;line-height:.92}
+.mono{font-family:Mono;font-weight:500;letter-spacing:.07em;text-transform:uppercase}
+.fr{font-family:Fr;font-style:italic}
+.sig{color:var(--sig)}
+.blk{position:absolute;left:80px;right:80px}
+.k{font-size:30px;color:var(--sig)}
+#cap{position:absolute;left:60px;right:60px;top:1420px;text-align:center;z-index:40}
+#cap span{display:inline-block;font:700 80px/1.06 Osw;text-transform:uppercase;color:var(--cream);padding:6px 22px 10px;background:#110e0bd9}
+#cap span b{color:var(--sig);font-weight:700}
+#brand{position:absolute;left:80px;top:150px;font:600 26px Mono;letter-spacing:.12em;color:var(--cream);opacity:.8;z-index:41}
+#brand i{color:var(--sig);font-style:normal}
+#grain{position:absolute;inset:0;width:100%;height:100%;mix-blend-mode:overlay;opacity:.5;z-index:50;pointer-events:none}
+#vig{position:absolute;inset:0;z-index:49;background:radial-gradient(ellipse at 50% 45%,transparent 50%,#0009 100%)}
+.ax{font:500 26px Mono;fill:#4a4237}
+.hand{font:italic 600 44px Fr;fill:var(--red)}
+.hands{font:italic 400 30px Fr;fill:#3d342a}
+
+/* guess */
+#s_guess .plate{background-image:url(../assets/plates/retro.webp);filter:brightness(.42) saturate(.85);background-position:60% 50%}
+#s_guess .shade{background:linear-gradient(180deg,#0b0907e8,#0b090780 50%,#0b0907f0)}
+#g_now{font-size:330px;margin-top:10px}
+#g_bar{height:14px;background:var(--sig);width:0;margin-top:24px}
+#g_list{margin-top:50px;font:600 50px/1.35 Osw;text-transform:uppercase}
+#g_list div{opacity:0}
+#g_list span{float:right}
+
+/* hours */
+#s_hours .plate{background-image:url(../assets/plates/clock.webp);filter:brightness(.42) saturate(.75);background-position:30% 50%}
+#s_hours .shade{background:linear-gradient(180deg,#0a0c0be8,#0a0c0b99 50%,#0a0c0bf0)}
+.hrow{display:grid;grid-template-columns:300px 1fr 150px;align-items:center;height:96px;opacity:0}
+.hrow .nm{font:600 46px Osw;text-transform:uppercase}
+.hrow .nm small{display:block;font:400 22px Mono;color:var(--mute);margin-top:-4px}
+.hrow svg{width:100%;height:34px;overflow:visible}
+.hrow .h{font:700 52px Osw;text-align:right}
+
+/* attention */
+#s_attn .plate{background-image:url(../assets/plates/plaster.webp);filter:brightness(1.03) saturate(.85)}
+#s_attn .shade{background:radial-gradient(ellipse at 50% 40%,transparent 45%,#5a3d1f66 100%)}
+#wsvg{position:absolute;left:30px;top:520px;width:1020px;height:760px;overflow:visible}
+#wbig{position:absolute;left:80px;top:1300px;color:var(--ink);font-size:96px;opacity:0}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+ <filter id="rough" x="-5%" y="-30%" width="110%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="7"/></filter>
+ <filter id="ruff" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".02" numOctaves="2" seed="8"/><feDisplacementMap in="SourceGraphic" scale="4"/></filter>
+</defs></svg>
+<div id="brand">GTA 6 <i>·</i> BY THE NUMBERS</div>
+
+<section class="scene" id="s_guess"><div class="plate"></div><div class="shade"></div>
+ <div class="blk" style="top:300px">
+  <div class="mono k">GTA III · October 2001 · US launch price</div>
+  <div class="osw" style="font-size:190px;margin-top:20px">$49.99</div>
+  <div class="mono" style="font-size:34px;margin-top:40px;color:var(--mute)" id="g_q">In today's money:</div>
+  <div class="osw" id="g_now">?</div>
+  <div id="g_bar"></div>
+  <div id="g_list"></div>
+ </div>
+</section>
+
+<section class="scene" id="s_hours"><div class="plate"></div><div class="shade"></div>
+ <div class="blk" style="top:270px">
+  <div class="osw" style="font-size:110px">Hours of work<br><span class="sig">to buy every GTA</span></div>
+  <div class="mono" style="font-size:24px;color:var(--mute);margin-top:22px">at the average US hourly wage, launch month</div>
+  <div id="hrows" style="margin-top:44px"></div>
+ </div>
+</section>
+
+<section class="scene" id="s_attn"><div class="plate"></div><div class="shade"></div>
+ <div class="blk" style="top:270px"><div class="osw" style="font-size:100px;color:var(--ink)">3 years of hype</div><div class="fr" style="font-size:40px;color:#4a4237;margin-top:10px">Daily views, GTA 6 Wikipedia page</div></div>
+ <svg id="wsvg" viewBox="0 0 1020 760"></svg>
+ <div class="osw" id="wbig"></div>
+</section>
+
+<div id="cap"></div>
+<svg id="grain"><filter id="gn"><feTurbulence id="gt" type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="1" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#gn)"/></svg>
+<div id="vig"></div>
+<script>
+const D=window.__DATA__,F=D.facts,TL=D.timeline;
+const ease=x=>{x=Math.min(1,Math.max(0,x));return 1-Math.pow(1-x,3)},clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const usd0=v=>'$'+Math.round(v).toLocaleString('en-US'),usd=v=>'$'+v.toFixed(2);
+const G=F.games,by=Object.fromEntries(G.map(g=>[g.id,g]));
+const fade=(e,a)=>{e.style.opacity=ease(a);e.style.transform=`translateY(${(1-ease(a))*20}px)`};
+
+/* captions: chunks of <=4 words, timed by character share */
+const chunks=[];TL.scenes.forEach(sc=>sc.beats.forEach(b=>{const w=b.text.split(' ');const parts=[];for(let i=0;i<w.length;i+=4)parts.push(w.slice(i,i+4).join(' '));
+ const tot=parts.reduce((a,p)=>a+p.length+1,0);let c=sc.start+b.start;parts.forEach(p=>{const d=b.dur*(p.length+1)/tot;chunks.push([c,c+d,p]);c+=d})}));
+const HL=/(\$?\d[\d,.]*%?|cheapest|every|record|hours?|million|thousand|hundred)/gi;
+
+/* guess */
+const g3=by.gta3;
+[['GTA V · 2013',by.gta5.adj],['GTA IV · 2008',by.gta4.adj],['GTA 6 · 2026',by.gta6.adj]].forEach(([n,v],i)=>{const d=document.createElement('div');d.innerHTML=`${n}<span ${i==2?'class="sig"':''}>${i==2?usd(v):usd0(v)}</span>`;$('#g_list').appendChild(d)});
+
+/* hours rows */
+const hmax=Math.max(...G.map(g=>g.hours));
+G.forEach((g,i)=>{const six=g.id=='gta6',col=six?'#ff6a1a':'#f1e7d3';const e=document.createElement('div');e.className='hrow';e.dataset.i=i;
+ e.innerHTML=`<div class="nm" style="color:${col}">${g.name}<small>${g.year}</small></div><svg viewBox="0 0 500 34" preserveAspectRatio="none"><rect x="0" y="5" height="24" width="0" fill="${col}" filter="url(#rough)" data-w="${g.hours/hmax*490}"/></svg><div class="h" style="color:${col}">${g.hours.toFixed(1)}h</div>`;
+ $('#hrows').appendChild(e)});
+
+/* attention chart: weekly sums so the line reads on a phone */
+const S=F.wiki_series,wk=[];for(let i=0;i<S.length;i+=7){const sl=S.slice(i,i+7);wk.push([sl[0][0],Math.max(...sl.map(x=>x[1]))])}
+const W=1020,H=760,L=110,R=40,T=60,B=70,N=wk.length,ymax=Math.max(...wk.map(w=>w[1]))*1.12;
+const X=i=>L+(W-L-R)*i/(N-1),Y=v=>T+(H-T-B)*(1-v/ymax),wI=d=>{let j=wk.findIndex(w=>w[0]>d);return j<0?N-1:Math.max(0,j-1)};
+const kfmt=v=>v>=1e6?(v/1e6).toFixed(1)+'M':Math.round(v/1e3)+'K';
+let g='';[.25,.5,.75,1].forEach(f=>{const v=ymax/1.12*f;g+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#1c1a17" stroke-opacity=".12" stroke-width="2"/><text class="ax" x="${L-14}" y="${Y(v)+9}" text-anchor="end">${kfmt(v)}</text>`});
+['2024','2025','2026'].forEach(y=>g+=`<text class="ax" x="${X(wI(y+'-01-01'))}" y="${H-18}" text-anchor="middle">${y}</text>`);
+g+=`<line x1="${L}" x2="${W-R}" y1="${Y(0)}" y2="${Y(0)}" stroke="#1c1a17" stroke-opacity=".5" stroke-width="2"/>`;
+g+=`<defs><clipPath id="cl"><rect id="clr" x="0" y="0" width="0" height="${H}"/></clipPath></defs><g clip-path="url(#cl)" filter="url(#ruff)"><polyline fill="none" stroke="#1c1a17" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" points="${wk.map((w,i)=>X(i).toFixed(1)+','+Y(w[1]).toFixed(1)).join(' ')}"/></g>`;
+let sd=11;const rnd=()=>{sd=(sd*16807)%2147483647;return sd/2147483647};
+function rel(cx,cy,rx,ry){let p=[];for(let i=0;i<=40;i++){const a=-.5+i/34*Math.PI*2.13,j=1+(rnd()-.5)*.07;p.push((cx+Math.cos(a)*rx*j).toFixed(1)+' '+(cy+Math.sin(a)*ry*j).toFixed(1))}return 'M'+p.join(' L')}
+const sp=F.wiki_spikes.slice(0,2).sort((a,b)=>a.day<b.day?-1:1);
+sp.forEach((s,j)=>{const i=wI(s.day),x=X(i),y=Y(wk[i][1]),right=x<W/2;
+ g+=`<g id="m${j}"><path class="dr" d="${rel(x,y,40,30)}" fill="none" stroke="#c4301c" stroke-width="6" filter="url(#rough)"/><text class="hand tx" x="${right?x+52:x-52}" y="${y+14}" text-anchor="${right?'start':'end'}">${s.label||s.day}</text><text class="hands tx" x="${right?x+52:x-52}" y="${y+52}" text-anchor="${right?'start':'end'}">${kfmt(s.views)} in a day</text></g>`});
+const lx=X(N-1),ly=Y(wk[N-1][1]);
+g+=`<g id="m2"><path class="dr" d="${rel(lx-4,ly,34,28)}" fill="none" stroke="#c4301c" stroke-width="6" filter="url(#rough)"/><text class="hand tx" x="${lx-40}" y="${ly-44}" text-anchor="end">now</text></g>`;
+$('#wsvg').innerHTML=g;
+const lens=new Map();$$('.dr').forEach(p=>{const l=p.getTotalLength();lens.set(p,l);p.style.strokeDasharray=l;p.style.strokeDashoffset=l});
+const dp=(p,a)=>p.style.strokeDashoffset=lens.get(p)*(1-ease(a));
+const mk=(id,s,tt)=>{const e=$('#'+id);dp(e.querySelector('.dr'),(tt-s)/.6);e.querySelectorAll('.tx').forEach(x=>x.style.opacity=ease((tt-s-.3)/.3))};
+
+window.draw=function(t){
+ $('#gt').setAttribute('seed',1+Math.floor(t*24)%12);
+ const sc=TL.scenes[0],tt=t-sc.start,b=sc.beats,p=t/TL.total,bs=i=>b[Math.min(i,b.length-1)].start;
+ $$('.scene').forEach(e=>e.classList.toggle('on',e.id==sc.type));
+ $('#brand').style.color=sc.type=='s_attn'?'#1c1a17':'';$('#'+sc.type).querySelector('.plate').style.transform=`scale(${1.03+.08*p})`;
+ const c=chunks.find(c=>t>=c[0]-.05&&t<c[1]+.15);$('#cap').innerHTML=c?`<span>${c[2].replace(HL,'<b>$1</b>')}</span>`:'';
+ if(sc.type=='s_guess'){
+  const rs=bs(2),n=$('#g_now');
+  if(tt<rs-.05){n.textContent='?';n.style.color='var(--cream)';const s0=bs(1)+b[1].dur;const cd=clamp((tt-s0)/Math.max(.1,rs-s0));$('#g_bar').style.width=(tt>s0?(1-cd)*100:0)+'%'}
+  else{n.textContent=usd0(g3.adj);n.style.color='var(--sig)';$('#g_bar').style.width='0';n.style.transform=`scale(${1+.12*(1-ease((tt-rs)/.35))})`;n.style.transformOrigin='left center'}
+  $$('#g_list div').forEach((d,i)=>fade(d,(tt-bs(3)-i*.9)/.4));
+ }
+ if(sc.type=='s_hours'){
+  const when=[1,1,2,2,2,2,2,3];
+  $$('.hrow').forEach(e=>{const i=+e.dataset.i,s=bs(when[i])+(i-when.indexOf(when[i]))*.3;e.style.opacity=ease((tt-s)/.35);const r=e.querySelector('rect');r.setAttribute('width',ease((tt-s)/.7)*r.dataset.w)});
+ }
+ if(sc.type=='s_attn'){
+  const iA=wI(sp[0].day),iB=wI(sp[1].day);
+  const ks=[[0,0],[bs(1)+1.5,iA+2],[bs(2)+1.5,iB+2],[bs(3)+.8,N-1]];
+  let idx=0;for(let i=1;i<ks.length;i++){if(tt<=ks[i][0]||i==ks.length-1){const[a0,ia]=ks[i-1],[c0,ic]=ks[i];idx=ia+(ic-ia)*clamp((tt-a0)/Math.max(.01,c0-a0));break}}
+  $('#clr').setAttribute('width',X(idx)+10);
+  mk('m0',bs(1)+1.2,tt);mk('m1',bs(2)+1.2,tt);mk('m2',bs(3)+1,tt);
+  const wb=$('#wbig');if(tt>=bs(3)){wb.innerHTML=`<span style="color:#c4301c">${kfmt(F.wiki_last7_avg)}</span> a day now`;fade(wb,(tt-bs(3)-.3)/.4)}else wb.style.opacity=0;
+ }
+};
+document.fonts.ready.then(()=>{window.draw(0);window.__ready=true});
+</script></body></html>

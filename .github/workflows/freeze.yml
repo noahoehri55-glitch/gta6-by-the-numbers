@@ -1,0 +1,40 @@
+name: freeze
+
+# Pulls public data and freezes it at episode.json's data_end into data/frozen/facts.json.
+# Scripts are written against that file, so narration and graphics always match.
+on:
+  push:
+    branches: [main]
+    paths: ["episode.json", "pipeline/fetch.py", "pipeline/freeze.py", "data/static/**", ".github/workflows/freeze.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: freeze
+  cancel-in-progress: true
+
+jobs:
+  freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests
+      - name: Fetch public data
+        run: python pipeline/fetch.py
+      - name: Freeze
+        run: python pipeline/freeze.py
+      - name: Commit frozen data
+        run: |
+          git config user.name "data-bot"
+          git config user.email "data-bot@users.noreply.github.com"
+          git add -f data/raw data/frozen
+          git diff --cached --quiet && exit 0
+          git commit -q -m "Freeze data at $(python -c "import json;print(json.load(open('episode.json'))['data_end'])")"
+          git pull -q --rebase origin main
+          git push -q origin HEAD:main

@@ -1,0 +1,29 @@
+{
+ "_note": "US launch prices (standard edition) and cheapest new PlayStation on launch day. 1997/1999 use the launch month Kotaku used. Console prices = Kotaku bundle totals minus the game price, except PS5 Digital (PlayStation Blog, effective 2 Apr 2026).",
+ "games": [
+  {"id": "gta1",  "name": "GTA",           "short": "GTA",  "year": 1997, "month": "1997-12", "price": 49.99, "console": "PS1",            "console_price": 149.99},
+  {"id": "gta2",  "name": "GTA 2",         "short": "GTA 2","year": 1999, "month": "1999-10", "price": 49.99, "console": "PS1",            "console_price": 99.99},
+  {"id": "gta3",  "name": "GTA III",       "short": "III",  "year": 2001, "month": "2001-10", "price": 49.99, "console": "PS2",            "console_price": 299.99},
+  {"id": "vc",    "name": "Vice City",     "short": "VC",   "year": 2002, "month": "2002-10", "price": 49.99, "console": "PS2",            "console_price": 199.99},
+  {"id": "sa",    "name": "San Andreas",   "short": "SA",   "year": 2004, "month": "2004-10", "price": 49.99, "console": "PS2",            "console_price": 149.99},
+  {"id": "gta4",  "name": "GTA IV",        "short": "IV",   "year": 2008, "month": "2008-04", "price": 59.99, "console": "PS3",            "console_price": 399.99},
+  {"id": "gta5",  "name": "GTA V",         "short": "V",    "year": 2013, "month": "2013-09", "price": 59.99, "console": "PS3",            "console_price": 299.99},
+  {"id": "gta6",  "name": "GTA 6",         "short": "6",    "year": 2026, "month": "latest",  "price": 79.99, "console": "PS5 Digital",    "console_price": 599.99}
+ ],
+ "gta6_ultimate": 99.99,
+ "events": [
+  {"date": "2023-12-05", "label": "Trailer 1"},
+  {"date": "2025-05-02", "label": "Delay to May 2026"},
+  {"date": "2025-05-06", "label": "Trailer 2"},
+  {"date": "2025-11-06", "label": "Delay to Nov 2026"},
+  {"date": "2026-06-25", "label": "Pre-orders open"}
+ ],
+ "sources": {
+  "prices": "https://kotaku.com/this-is-the-most-expensive-its-ever-been-to-buy-a-new-gta-and-a-playstation-to-play-it-on-2000712281",
+  "ps5": "https://blog.playstation.com/2026/03/27/new-price-changes-for-ps5-ps5-pro-and-playstation-portal-remote-player/",
+  "gta6_price": "https://www.pcgameshardware.de/GTA-6-Spiel-55239/News/GTA-6-vorbestellen-Standard-Ultimate-Edition-Europreise-1546282/",
+  "cpi": "https://www.bls.gov/cpi/ (CUUR0000SA0, CPI-U, not seasonally adjusted)",
+  "wages": "https://www.bls.gov/ces/ (CES0500000008, avg hourly earnings, production and nonsupervisory employees)",
+  "attention": "https://wikimedia.org/api/rest_v1/ (en.wikipedia pageviews, Grand_Theft_Auto_VI, users only)"
+ }
+}

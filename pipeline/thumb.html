@@ -1,0 +1,18 @@
+<!doctype html><meta charset="utf-8"><style>
+@font-face{font-family:Osw;src:url(../assets/fonts/oswald-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:Mono;src:url(../assets/fonts/ibm-plex-mono-latin-600-normal.woff2);font-weight:600}
+*{margin:0;box-sizing:border-box}body{width:1280px;height:720px;overflow:hidden;position:relative;background:#000}
+.p{position:absolute;inset:0;background:url(../assets/plates/cold.webp) center/cover;filter:brightness(.6) saturate(.95)}
+.s{position:absolute;inset:0;background:linear-gradient(90deg,#0d0a07f5 0%,#0d0a07c0 50%,#0d0a0720 88%)}
+h1{position:absolute;left:58px;top:46px;font:700 100px/0.92 Osw;text-transform:uppercase;color:#f1e7d3}
+h1 span{color:#ff6a1a}
+.n{position:absolute;left:54px;bottom:34px;font:700 150px/1 Osw;color:#f1e7d3;text-shadow:0 6px 30px #0009}
+.n small{font:600 30px Mono;color:#b9ad98;letter-spacing:.06em;margin-left:10px}
+#b{position:absolute;right:46px;bottom:46px;width:520px;height:420px;display:flex;align-items:flex-end;gap:14px}
+#b div{flex:1;background:#f1e7d3;box-shadow:0 6px 18px #000a}
+#b div.six{background:#ff6a1a}
+</style><div class="p"></div><div class="s"></div>
+<h1>The cheapest<br>GTA <span>ever</span><br>released?</h1>
+<div class="n">$79.99<small>VS EVERY GTA SINCE 1997</small></div>
+<div id="b"></div>
+<script>const v=ADJ,m=Math.max(...v);v.forEach((x,i)=>{const d=document.createElement('div');d.style.height=(x/m*100)+'%';if(i==v.length-1)d.className='six';document.getElementById('b').appendChild(d)})</script>

@@ -1,0 +1,8 @@
+build/
+src/
+tts_cache/
+models
+.venv/
+pipeline/_thumb_render.html
+__pycache__/
+samples/

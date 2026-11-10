@@ -1,0 +1,93 @@
+name: render
+
+on:
+  push:
+    branches: [main]
+    paths: ["jobs/**", "pipeline/*.html", "pipeline/render.py", "pipeline/voice.py", "pipeline/thumb.py", "assets/**", ".github/workflows/render.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: render
+  cancel-in-progress: true
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Anything to render?
+        id: chk
+        run: |
+          if [ -f data/frozen/facts.json ] && ls jobs/*/script.json >/dev/null 2>&1; then echo "go=1" >> $GITHUB_OUTPUT; else echo "No frozen data or no jobs yet"; fi
+
+      - uses: actions/setup-python@v5
+        if: steps.chk.outputs.go
+        with:
+          python-version: "3.12"
+
+      - name: Install tools
+        if: steps.chk.outputs.go
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install -q -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - uses: actions/cache@v4
+        if: steps.chk.outputs.go
+        with:
+          path: tts_cache
+          key: tts-${{ github.sha }}
+          restore-keys: tts-
+
+      - name: Narration (ElevenLabs)
+        if: steps.chk.outputs.go
+        env:
+          TTS: elevenlabs
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          ELEVENLABS_VOICE_ID: ${{ vars.ELEVENLABS_VOICE_ID }}
+        run: |
+          mkdir -p build && cp data/frozen/facts.json build/facts.json
+          for j in $(ls jobs); do python pipeline/voice.py "$j"; done
+
+      - name: Render
+        if: steps.chk.outputs.go
+        run: |
+          for j in $(ls jobs); do python pipeline/render.py "$j" full; done
+          python pipeline/thumb.py
+
+      - name: Checks (frames + loudness)
+        if: steps.chk.outputs.go
+        run: |
+          mkdir -p out/check
+          for j in $(ls jobs); do
+            d=$(ffprobe -v error -show_entries format=duration -of csv=p=0 build/$j/video.mp4)
+            ffmpeg -loglevel error -y -i build/$j/video.mp4 -vf "fps=1/6,scale=480:-1,tile=6x5" -frames:v 1 out/check/$j-frames.jpg
+            ffmpeg -hide_banner -nostats -i build/$j/video.mp4 -af ebur128=peak=true -f null - 2>&1 | grep -A12 "Summary:" > out/check/$j-loudness.txt
+            echo "$j duration=$d" >> out/check/summary.txt
+            grep -E "I:|Peak:" out/check/$j-loudness.txt | tr -s ' ' >> out/check/summary.txt
+          done
+          cat out/check/summary.txt
+
+      - name: Publish to renders branch
+        if: steps.chk.outputs.go
+        run: |
+          for j in $(ls jobs); do
+            ffmpeg -loglevel error -y -i build/$j/video.mp4 -c:v libx264 -preset medium -crf 24 -c:a copy -movflags +faststart out/$j.mp4
+            cp build/$j/captions.srt out/$j.srt
+            cp build/$j/timeline.json out/check/$j-timeline.json
+            [ -f jobs/$j/description.txt ] && cp jobs/$j/description.txt out/$j-description.txt
+          done
+          cp build/thumbnail.png out/thumbnail.png
+          cp build/facts.json out/facts.json
+          cd out
+          git init -q -b renders
+          git config user.name "render-bot"
+          git config user.email "render-bot@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Render ${GITHUB_SHA::7}"
+          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" renders
